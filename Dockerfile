@@ -4,12 +4,13 @@ FROM python:3.11-slim
 RUN apt-get update && apt-get install -y --no-install-recommends git curl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY requirements.txt .
+COPY requirements.txt requirements-base.txt .
 
 # Install DAWG-Python first (pure Python, no C compiler needed)
-# then install the rest; DEMorphy is installed with --no-deps to avoid the broken 'dawg' C package
+# then install the rest without DEMorphy, then DEMorphy --no-deps to skip the broken 'dawg' C package
+COPY requirements-base.txt .
 RUN pip install --no-cache-dir DAWG-Python && \
-    pip install --no-cache-dir $(grep -v DEMorphy requirements.txt) && \
+    pip install --no-cache-dir -r requirements-base.txt && \
     pip install --no-cache-dir --no-deps "DEMorphy @ git+https://github.com/DuyguA/DEMorphy.git"
 
 # Create 'dawg' shim so demorphy can import it (DAWG-Python installs as 'dawg_python')
