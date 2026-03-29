@@ -4,7 +4,7 @@ import spacy
 from demorphy import Analyzer
 
 app = FastAPI()
-nlp = spacy.load("de_core_news_lg")
+nlp = spacy.load("de_core_news_md")
 morph = Analyzer(char_subs_allowed=True)
 
 
